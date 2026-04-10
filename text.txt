@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First 10K Blueprint • Your 6-Week Running Transformation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+        
+        :root {
+            --teal: #00BFA5;
+            --orange: #FF6200;
+            --navy: #0A2540;
+        }
+        
+        * { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        .course-header {
+            background: linear-gradient(135deg, #0A2540 0%, #00BFA5 100%);
+        }
+        
+        .modal {
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -2px;
+            left: 0;
+            background-color: #FF6200;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .progress-bar { transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        
+        .run-log input, .run-log textarea { font-size: 15px; }
+        
+        .section-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .section-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-[#0A2540]">
+
+    <!-- TOP NAV (always visible) -->
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-10 h-10 bg-[#00BFA5] rounded-3xl flex items-center justify-center text-white text-2xl">🏃‍♂️</div>
+                <h1 onclick="navigateTo('landing')" class="heading-font text-3xl font-semibold tracking-tighter cursor-pointer">First 10K Blueprint</h1>
+            </div>
+
+            <div id="nav-links" class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+                <!-- Populated by JS based on auth status -->
+            </div>
+
+            <div class="flex items-center gap-x-4">
+                <div id="user-pill" onclick="showAccountModal()" class="hidden items-center gap-x-2 bg-slate-100 hover:bg-slate-200 px-5 py-2 rounded-3xl cursor-pointer">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span id="user-name-display" class="font-medium"></span>
+                </div>
+                
+                <button onclick="logout()" id="logout-btn" class="hidden text-sm font-medium text-slate-500 hover:text-slate-700">Log out</button>
+                
+                <div onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center text-2xl cursor-pointer">
+                    <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t px-8 py-6">
+            <div class="flex flex-col gap-y-4 text-sm font-medium" id="mobile-nav-links"></div>
+        </div>
+    </nav>
+
+    <!-- LANDING / PAYWALL PAGE -->
+    <div id="page-landing" class="min-h-screen">
+        <section class="course-header min-h-screen flex items-center justify-center relative overflow-hidden">
+            <div class="max-w-6xl mx-auto px-8 text-center text-white pt-16">
+                <div class="inline-flex items-center gap-x-3 bg-white/20 text-white text-sm font-medium px-8 py-3 rounded-3xl mb-8">
+                    <i class="fa-solid fa-flag-checkered"></i> 6 WEEKS • LIFETIME ACCESS • PROVEN TRANSFORMATION
+                </div>
+                <h1 class="heading-font text-7xl md:text-8xl font-bold leading-none tracking-tighter mb-6">
+                    THE FIRST<br>10K BLUEPRINT
+                </h1>
+                <p class="text-4xl font-light mb-10 max-w-2xl mx-auto">From couch to confident finisher in just 6 weeks — no experience needed.</p>
+                
+                <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-xl rounded-3xl p-10 mb-12">
+                    <div class="grid grid-cols-2 gap-8 text-left">
+                        <div class="flex items-center gap-x-4">
+                            <div class="text-5xl">🏃‍♂️</div>
+                            <div>
+                                <div class="font-semibold text-xl">6-Week Plan</div>
+                                <p class="text-sm opacity-75">3 runs/week + daily guidance</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-x-4">
+                            <div class="text-5xl">📈</div>
+                            <div>
+                                <div class="font-semibold text-xl">Progress Tracker</div>
+                                <p class="text-sm opacity-75">Saves automatically • Lifetime access</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-x-4">
+                            <div class="text-5xl">🧠</div>
+                            <div>
+                                <div class="font-semibold text-xl">Habits + Strategies</div>
+                                <p class="text-sm opacity-75">Mental game, nutrition &amp; injury-proofing</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-x-4">
+                            <div class="text-5xl">🏆</div>
+                            <div>
+                                <div class="font-semibold text-xl">Official Certificate</div>
+                                <p class="text-sm opacity-75">Shareable + printable</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRICING -->
+                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 mb-12">
+                    <!-- Weekly Plan -->
+                    <div onclick="selectPlan('weekly')" id="plan-weekly" class="bg-white text-[#0A2540] rounded-3xl p-8 cursor-pointer border-4 border-transparent hover:border-[#FF6200]">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="uppercase text-xs font-semibold tracking-widest bg-orange-100 text-[#FF6200] inline-block px-4 py-1 rounded-3xl mb-4">Most Flexible</div>
+                                <h3 class="text-3xl font-semibold">$9.99 <span class="text-xl font-normal">/ week</span></h3>
+                                <p class="text-slate-600 mt-1">Cancel anytime • Pause &amp; resume</p>
+                            </div>
+                            <i class="fa-solid fa-credit-card text-5xl text-[#FF6200]"></i>
+                        </div>
+                        <ul class="mt-8 space-y-4 text-left text-sm">
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Full course + all bonuses</li>
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Weekly habit guides</li>
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Progress saved forever</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- One-time Lifetime -->
+                    <div onclick="selectPlan('lifetime')" id="plan-lifetime" class="bg-white text-[#0A2540] rounded-3xl p-8 cursor-pointer border-4 border-[#FF6200] relative">
+                        <div class="absolute -top-3 right-6 bg-[#FF6200] text-white text-xs font-bold px-6 py-1 rounded-3xl">BEST VALUE • SAVE 50%</div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-3xl font-semibold">$49.99 <span class="text-xl font-normal">one-time</span></h3>
+                                <p class="text-slate-600 mt-1">Lifetime access • No recurring fees</p>
+                            </div>
+                            <i class="fa-solid fa-gem text-5xl text-[#00BFA5]"></i>
+                        </div>
+                        <ul class="mt-8 space-y-4 text-left text-sm">
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Everything in weekly plan</li>
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Private community forever</li>
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Future updates included</li>
+                            <li class="flex items-center gap-x-3"><i class="fa-solid fa-check text-[#00BFA5]"></i> Referral rewards</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button onclick="showAuthModal('signup')" 
+                        class="text-2xl bg-white text-[#0A2540] font-semibold px-16 py-7 rounded-3xl inline-flex items-center gap-x-4 hover:shadow-2xl shadow-xl">
+                    CREATE FREE ACCOUNT &amp; UNLOCK COURSE
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                
+                <p class="mt-8 text-xs opacity-75">🔒 Secure checkout • Instant access after payment • 30-day money-back guarantee</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- MAIN APP PAGES (hidden until paid + logged in) -->
+    <div id="app-container" class="hidden max-w-7xl mx-auto px-8 py-10">
+
+        <!-- DASHBOARD / COURSE PAGE -->
+        <div id="page-course" class="page">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="heading-font text-5xl font-semibold">Welcome back, <span id="user-firstname" class="text-[#00BFA5]"></span>!</h2>
+                    <p class="text-xl text-slate-600">Your 6-week journey to the 10K finish line</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm font-medium">OVERALL PROGRESS</div>
+                    <div class="flex items-baseline gap-x-3">
+                        <div id="global-progress-text" class="font-mono text-6xl font-bold text-[#FF6200]">0%</div>
+                        <div id="streak-counter" class="flex items-center gap-x-1 text-amber-500 text-sm font-semibold"><i class="fa-solid fa-fire"></i> <span id="streak-days">0</span> day streak</div>
+                    </div>
+                    <div class="h-4 bg-slate-200 rounded-3xl overflow-hidden w-96">
+                        <div id="global-progress-bar" class="progress-bar h-4 bg-[#FF6200] w-0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6-WEEK PLAN (same as before but improved) -->
+            <div id="plan-section"></div>
+        </div>
+
+        <!-- GUIDANCE PAGES -->
+        <div id="page-habits" class="page hidden">
+            <h2 class="heading-font text-5xl font-semibold mb-8">Daily Habits That Make You a Runner</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="section-card bg-white rounded-3xl p-8">
+                    <h3 class="text-2xl font-semibold mb-3">Morning Mobility Routine</h3>
+                    <p class="text-slate-600">5-minute dynamic stretches every morning to wake up your hips, ankles and core. Prevents 80% of common beginner injuries.</p>
+                    <button onclick="markHabitDone(1)" class="mt-6 text-sm flex items-center gap-x-2 text-[#00BFA5]"><i class="fa-solid fa-check-circle"></i> Mark complete today</button>
+                </div>
+                <div class="section-card bg-white rounded-3xl p-8">
+                    <h3 class="text-2xl font-semibold mb-3">Sleep &amp; Recovery Rule</h3>
+                    <p class="text-slate-600">Aim for 7–9 hours. Your body builds aerobic base while you sleep. Track your sleep score here.</p>
+                </div>
+                <div class="section-card bg-white rounded-3xl p-8">
+                    <h3 class="text-2xl font-semibold mb-3">Hydration Tracker</h3>
+                    <p class="text-slate-600">Drink half your body weight in ounces daily. Add electrolytes on run days.</p>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="logWater(500)" class="flex-1 py-3 border rounded-3xl text-sm">+500ml</button>
+                        <button onclick="logWater(1000)" class="flex-1 py-3 border rounded-3xl text-sm">+1L</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-benefits" class="page hidden">
+            <h2 class="heading-font text-5xl font-semibold mb-8">Science-Backed Benefits of Your First 10K</h2>
+            <div class="grid md:grid-cols-2 gap-8 text-lg">
+                <div class="bg-white p-8 rounded-3xl">❤️ <strong>Heart health</strong> — lowers resting heart rate in 4 weeks</div>
+                <div class="bg-white p-8 rounded-3xl">🧠 <strong>Mental clarity</strong> — boosts BDNF (brain fertilizer) by 30%</div>
+                <div class="bg-white p-8 rounded-3xl">💪 <strong>Metabolism boost</strong> — burns fat for 24h after each run</div>
+                <div class="bg-white p-8 rounded-3xl">😊 <strong>Confidence &amp; mood</strong> — proven to reduce anxiety more than antidepressants in mild cases</div>
+            </div>
+        </div>
+
+        <div id="page-strategies" class="page hidden">
+            <h2 class="heading-font text-5xl font-semibold mb-8">Proven Strategies &amp; Mental Tools</h2>
+            <div class="space-y-8">
+                <div class="bg-white rounded-3xl p-8">
+                    <h3 class="font-semibold text-2xl mb-4">The 3-2-1 Breathing Technique</h3>
+                    <p class="text-slate-600">Inhale 3 steps • Exhale 2 steps • Hold 1 step. Used by elite marathoners to stay calm and efficient.</p>
+                </div>
+                <div class="bg-white rounded-3xl p-8">
+                    <h3 class="font-semibold text-2xl mb-4">Negative Split Strategy</h3>
+                    <p class="text-slate-600">Run the second half of every workout faster than the first. Builds unbreakable mental toughness.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMUNITY / REFERRAL (profit driver) -->
+        <div id="page-community" class="page hidden">
+            <h2 class="heading-font text-5xl font-semibold mb-8">First 10K Community</h2>
+            <p class="mb-8">Share your runs, get motivation, and earn $10 credit for every friend who joins using your link.</p>
+            <div class="bg-white rounded-3xl p-8 flex justify-between items-center">
+                <div>Your referral link: <span id="referral-link" class="font-mono text-[#00BFA5] select-all">https://first10k.com/?ref=YOURCODE123</span></div>
+                <button onclick="copyReferral()" class="bg-[#00BFA5] text-white px-8 py-4 rounded-3xl">Copy &amp; Share</button>
+            </div>
+        </div>
+
+        <!-- CERTIFICATE PAGE -->
+        <div id="page-certificate" class="page hidden">
+            <!-- Same beautiful certificate as original but enhanced -->
+            <div class="max-w-3xl mx-auto border-8 border-white shadow-2xl rounded-3xl p-12 text-center bg-gradient-to-br from-[#0A2540] to-[#00BFA5] text-white">
+                <div class="text-8xl mb-8">🏁</div>
+                <p class="uppercase tracking-[4px] text-sm mb-3">OFFICIAL FINISHER CERTIFICATE</p>
+                <h1 class="heading-font text-7xl mb-6">You Did It</h1>
+                <input id="cert-name" type="text" class="w-full text-center text-5xl bg-transparent border-b-4 border-white/50 focus:border-white outline-none text-white placeholder-white/60" placeholder="YOUR NAME">
+                <p class="mt-12 text-2xl">has officially completed The First 10K Blueprint</p>
+                <p id="cert-date-display" class="mt-8 text-xl"></p>
+                <button onclick="downloadCertificate()" class="mt-12 bg-white text-[#0A2540] px-14 py-6 rounded-3xl font-semibold text-xl flex items-center gap-x-4 mx-auto">
+                    <i class="fa-solid fa-download"></i> DOWNLOAD PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div onclick="if(event.target.id === 'auth-modal') hideAuthModal()" id="auth-modal" class="hidden fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" class="modal bg-white rounded-3xl max-w-md w-full mx-4 p-10">
+            <h2 id="modal-title" class="text-3xl font-semibold mb-8">Create your free account</h2>
+            
+            <div id="auth-form">
+                <input id="email-input" type="email" placeholder="your@email.com" class="w-full px-6 py-5 border rounded-3xl mb-4 text-lg">
+                <input id="password-input" type="password" placeholder="Choose a password" class="w-full px-6 py-5 border rounded-3xl mb-6 text-lg">
+                
+                <button onclick="handleAuth()" id="auth-button"
+                        class="w-full bg-[#FF6200] text-white py-6 rounded-3xl text-xl font-semibold">Create Account</button>
+                
+                <p onclick="switchAuthMode()" id="auth-switch-text" class="text-center mt-8 text-sm text-slate-500 cursor-pointer">
+                    Already have an account? Log in
+                </p>
+            </div>
+            
+            <div id="success-screen" class="hidden text-center">
+                <i class="fa-solid fa-envelope text-6xl text-[#00BFA5] mb-6"></i>
+                <h3 class="text-2xl font-semibold mb-3">Confirmation email sent!</h3>
+                <p class="text-slate-600">Check your inbox (and spam) — we've sent a welcome message with your first habit tip.</p>
+                <button onclick="hideAuthModal(); fakePaymentFlow()" class="mt-8 w-full py-6 bg-[#00BFA5] text-white rounded-3xl text-xl">Continue to payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCOUNT MODAL -->
+    <div onclick="if(event.target.id === 'account-modal') hideAccountModal()" id="account-modal" class="hidden fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" class="modal bg-white rounded-3xl max-w-lg w-full mx-4 p-8">
+            <div class="flex justify-between">
+                <h3 class="text-2xl font-semibold">My Account</h3>
+                <i onclick="hideAccountModal()" class="fa-solid fa-xmark text-3xl cursor-pointer"></i>
+            </div>
+            <div id="account-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE & LOCALSTORAGE ====================
+        let currentUser = null;
+        let isPaid = false;
+        let selectedPlan = null;
+
+        // Load from localStorage
+        function loadUser() {
+            const saved = localStorage.getItem('first10k_user');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                isPaid = localStorage.getItem('first10k_paid') === 'true';
+                renderNav();
+                if (isPaid) {
+                    document.getElementById('page-landing').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+                    navigateTo('course');
+                }
+            }
+        }
+
+        function saveUser() {
+            if (currentUser) localStorage.setItem('first10k_user', JSON.stringify(currentUser));
+        }
+
+        // ==================== PROGRESS SYSTEM (persistent) ====================
+        let progressData = JSON.parse(localStorage.getItem('first10k_progress')) || {
+            runsChecked: {},
+            globalPercent: 0,
+            streak: 0,
+            lastRunDate: null,
+            habitsDone: {},
+            waterLogged: 0
+        };
+
+        function saveProgress() {
+            localStorage.setItem('first10k_progress', JSON.stringify(progressData));
+            updateGlobalProgress();
+        }
+
+        function updateGlobalProgress() {
+            const totalRuns = 18; // 6 weeks × 3
+            let checked = Object.values(progressData.runsChecked).filter(v => v).length;
+            const percent = Math.round((checked / totalRuns) * 100);
+            progressData.globalPercent = percent;
+            
+            // Simple streak logic
+            const today = new Date().toDateString();
+            if (progressData.lastRunDate !== today && checked > 0) {
+                progressData.streak++;
+                progressData.lastRunDate = today;
+            }
+            
+            document.getElementById('global-progress-bar').style.width = percent + '%';
+            document.getElementById('global-progress-text').innerHTML = percent + '<span class="text-3xl align-super">%</span>';
+            if (document.getElementById('streak-days')) document.getElementById('streak-days').textContent = progressData.streak;
+            
+            saveProgress();
+        }
+
+        // ==================== WEEK RENDERING (same high-quality content) ====================
+        const weeksData = {
+            1: { title: "Week 1 • Building the Habit", runs: [
+                {d:"Day 1", workout:"Run 1 min / Walk 2 min × 8 (≈20 min)", focus:"Stay relaxed, no pressure"},
+                {d:"Day 2", workout:"Rest or easy 20-min walk", focus:"Recovery is training"},
+                {d:"Day 3", workout:"Run 1 min / Walk 2 min × 8 (≈20 min)", focus:"Practice 3-step breathing"}
+            ]},
+            2: { title: "Week 2 • Finding Your Rhythm", runs: [
+                {d:"Day 8", workout:"Run 1 min / Walk 2 min × 10 (≈25 min)", focus:"Smooth transitions"},
+                {d:"Day 9", workout:"Rest", focus:""},
+                {d:"Day 10", workout:"Run 1 min / Walk 2 min × 10 (≈25 min)", focus:"Early breathing control"}
+            ]},
+            3: { title: "Week 3 • Shifting the Balance", runs: [
+                {d:"Day 15", workout:"Run 2 min / Walk 2 min × 8 (≈28 min)", focus:"Posture check"},
+                {d:"Day 16", workout:"Rest", focus:""},
+                {d:"Day 17", workout:"Run 2 min / Walk 1 min × 10 (≈30 min)", focus:"More running than walking"}
+            ]},
+            4: { title: "Week 4 • Building Real Strength", runs: [
+                {d:"Day 22", workout:"Run 3 min / Walk 1 min × 8 (≈32 min)", focus:"Settle in fast"},
+                {d:"Day 23", workout:"Rest", focus:""},
+                {d:"Day 24", workout:"Run 5 min / Walk 1 min × 6 (≈36 min)", focus:"Break runs into chunks"}
+            ]},
+            5: { title: "Week 5 • Becoming a Runner", runs: [
+                {d:"Day 29", workout:"Run 8–10 min continuous", focus:"Start slower than you want"},
+                {d:"Day 30", workout:"Rest", focus:""},
+                {d:"Day 31", workout:"Run 12–15 min continuous", focus:"Steady rhythm the whole time"}
+            ]},
+            6: { title: "Week 6 • 10K Glory", runs: [
+                {d:"Day 36", workout:"Easy 20–25 min run", focus:"Celebrate how far you’ve come"},
+                {d:"Day 37", workout:"Rest", focus:""},
+                {d:"Day 40", workout:"10K RACE DAY — Go get it!", focus:"Start conservative. Finish strong."}
+            ]}
+        };
+
+        function renderPlan() {
+            let html = `<h2 class="heading-font text-5xl font-semibold mb-8">Your 6-Week Transformation Plan</h2>`;
+            
+            for (let w = 1; w <= 6; w++) {
+                const data = weeksData[w];
+                let weekHTML = `
+                <div class="mb-12">
+                    <div class="flex items-center justify-between border-b pb-4 mb-6">
+                        <h3 class="text-3xl font-semibold">${data.title}</h3>
+                        <div id="week${w}-progress" class="font-mono text-3xl font-bold text-[#00BFA5]">0/3 runs</div>
+                    </div>`;
+                
+                data.runs.forEach((run, i) => {
+                    const checked = progressData.runsChecked[`w${w}r${i}`] || false;
+                    weekHTML += `
+                    <div class="flex items-center gap-x-6 bg-slate-50 hover:bg-slate-100 rounded-3xl px-6 py-5 mb-4">
+                        <input type="checkbox" ${checked ? 'checked' : ''} 
+                               onchange="toggleRun(${w},${i});" class="w-7 h-7 accent-[#00BFA5]">
+                        <div class="flex-1">
+                            <div class="font-semibold">${run.d}</div>
+                            <div class="text-slate-600">${run.workout}</div>
+                        </div>
+                        <div class="text-right text-sm text-[#00BFA5]">${run.focus}</div>
+                        <div class="run-log w-40">
+                            <input type="text" placeholder="How I felt" value="${progressData.runsChecked[`w${w}r${i}note`] || ''}"
+                                   onblur="saveNote(${w},${i}, this.value)" class="w-full text-xs border border-slate-300 rounded-2xl px-3 py-2">
+                        </div>
+                    </div>`;
+                });
+                weekHTML += `</div>`;
+                html += weekHTML;
+            }
+            document.getElementById('plan-section').innerHTML = html;
+            updateWeekProgresses();
+        }
+
+        function toggleRun(week, runIndex) {
+            const key = `w${week}r${runIndex}`;
+            progressData.runsChecked[key] = !progressData.runsChecked[key];
+            saveProgress();
+            updateWeekProgresses();
+        }
+
+        function saveNote(week, runIndex, note) {
+            const key = `w${week}r${runIndex}note`;
+            progressData.runsChecked[key] = note;
+            saveProgress();
+        }
+
+        function updateWeekProgresses() {
+            for (let w = 1; w <= 6; w++) {
+                const checkedCount = weeksData[w].runs.filter((_, i) => progressData.runsChecked[`w${w}r${i}`]).length;
+                const el = document.getElementById(`week${w}-progress`);
+                if (el) el.textContent = `${checkedCount}/3 runs`;
+            }
+            updateGlobalProgress();
+        }
+
+        // ==================== AUTH & PAYMENT FLOW ====================
+        let authMode = 'signup';
+
+        function showAuthModal(mode) {
+            authMode = mode;
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = mode === 'signup' ? 'Create your free account' : 'Welcome back';
+            document.getElementById('auth-button').textContent = mode === 'signup' ? 'Create Account' : 'Log In';
+            document.getElementById('auth-switch-text').innerHTML = mode === 'signup' 
+                ? `Already have an account? <span class="text-[#FF6200]">Log in</span>` 
+                : `Need an account? <span class="text-[#FF6200]">Sign up</span>`;
+            document.getElementById('success-screen').classList.add('hidden');
+            document.getElementById('auth-form').classList.remove('hidden');
+        }
+
+        function hideAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function switchAuthMode() {
+            authMode = authMode === 'signup' ? 'login' : 'signup';
+            showAuthModal(authMode);
+        }
+
+        function handleAuth() {
+            const email = document.getElementById('email-input').value.trim();
+            if (!email) return alert("Please enter your email");
+            
+            // Simulate account creation
+            currentUser = {
+                email: email,
+                name: email.split('@')[0],
+                joined: new Date().toISOString()
+            };
+            
+            saveUser();
+            renderNav();
+            
+            // Show success + fake email confirmation
+            document.getElementById('auth-form').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+            
+            // Simulate welcome email
+            console.log('%c📧 Welcome email sent to ' + email + ' with first habit tip!', 'color:#00BFA5;font-weight:bold');
+        }
+
+        function fakePaymentFlow() {
+            hideAuthModal();
+            // Show pricing again but now with logged-in user
+            alert("🎉 Account created! Next step: choose your plan below to unlock the full course.");
+            // In a real app you would call Stripe here
+            selectPlan('lifetime'); // auto-select best value
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            const confirmed = confirm(`You selected the ${plan === 'lifetime' ? '$49.99 one-time' : '$9.99/week'} plan.\n\nIn a real app this would open Stripe checkout.\n\nFor demo, we’ll unlock the course now.`);
+            if (confirmed) {
+                isPaid = true;
+                localStorage.setItem('first10k_paid', 'true');
+                document.getElementById('page-landing').classList.add('hidden');
+                document.getElementById('app-container').classList.remove('hidden');
+                navigateTo('course');
+                renderPlan();
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+        function renderNav() {
+            const linksHTML = currentUser ? `
+                <a onclick="navigateTo('course')" class="nav-link cursor-pointer">Course</a>
+                <a onclick="navigateTo('habits')" class="nav-link cursor-pointer">Habits</a>
+                <a onclick="navigateTo('benefits')" class="nav-link cursor-pointer">Benefits</a>
+                <a onclick="navigateTo('strategies')" class="nav-link cursor-pointer">Strategies</a>
+                <a onclick="navigateTo('community')" class="nav-link cursor-pointer">Community</a>
+                <a onclick="navigateTo('certificate')" class="nav-link cursor-pointer">Certificate</a>
+            ` : '';
+            
+            document.getElementById('nav-links').innerHTML = linksHTML;
+            document.getElementById('mobile-nav-links').innerHTML = linksHTML;
+            
+            if (currentUser) {
+                document.getElementById('user-pill').classList.remove('hidden');
+                document.getElementById('user-name-display').textContent = currentUser.name;
+                document.getElementById('logout-btn').classList.remove('hidden');
+            }
+        }
+
+        function navigateTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.remove('hidden');
+            
+            if (page === 'course') renderPlan();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu-icon').classList.toggle('fa-bars');
+            document.getElementById('mobile-menu-icon').classList.toggle('fa-xmark');
+        }
+
+        function showAccountModal() {
+            const html = `
+                <p class="text-slate-600 mb-8">Logged in as <strong>${currentUser.email}</strong></p>
+                <div class="space-y-6">
+                    <button onclick="logout()" class="w-full py-6 border border-red-300 text-red-600 rounded-3xl flex items-center justify-center gap-x-3">
+                        <i class="fa-solid fa-right-from-bracket"></i> Log out
+                    </button>
+                    <div class="text-xs text-slate-400 text-center">Progress is saved automatically in your browser.<br>Upgrade to cloud sync in future updates.</div>
+                </div>`;
+            document.getElementById('account-content').innerHTML = html;
+            document.getElementById('account-modal').classList.remove('hidden');
+        }
+
+        function hideAccountModal() {
+            document.getElementById('account-modal').classList.add('hidden');
+        }
+
+        function logout() {
+            if (confirm('Log out?')) {
+                localStorage.removeItem('first10k_user');
+                localStorage.removeItem('first10k_paid');
+                window.location.reload();
+            }
+        }
+
+        // Extra profitable features
+        function markHabitDone(id) {
+            progressData.habitsDone[id] = true;
+            alert("✅ Habit marked complete! Your streak just got stronger.");
+            saveProgress();
+        }
+        
+        function logWater(ml) {
+            progressData.waterLogged += ml;
+            alert(`💧 +${ml}ml logged. You're crushing hydration today!`);
+            saveProgress();
+        }
+        
+        function copyReferral() {
+            navigator.clipboard.writeText("https://first10k.com/?ref=" + (currentUser ? currentUser.name : 'demo')).then(() => {
+                alert("🔗 Referral link copied! Share it and earn $10 per friend.");
+            });
+        }
+        
+        function downloadCertificate() {
+            const name = document.getElementById('cert-name').value || currentUser?.name || "Legendary Runner";
+            document.getElementById('cert-date-display').innerHTML = `on <strong>${new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}</strong>`;
+            alert(`🎉 Certificate for ${name} ready!\n\nUse browser print → Save as PDF.`);
+            window.print();
+        }
+
+        // ==================== START THE APP ====================
+        window.onload = () => {
+            loadUser();
+            if (isPaid && currentUser) {
+                document.getElementById('page-landing').classList.add('hidden');
+                document.getElementById('app-container').classList.remove('hidden');
+                navigateTo('course');
+            }
+            console.log('%c🚀 First 10K Blueprint v2.0 loaded — fully improved with accounts, progress saving, paywall, and profitability features!', 'color:#00BFA5;font-size:16px;font-weight:bold');
+        };
+    </script>
+</body>
+</html>
